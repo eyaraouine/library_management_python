@@ -1,0 +1,97 @@
+Metadata-Version: 2.1
+Name: trytond
+Version: 6.8.2
+Summary: Tryton server
+Home-page: http://www.tryton.org/
+Download-URL: http://downloads.tryton.org/6.8/
+Author: Tryton
+Author-email: foundation@tryton.org
+License: GPL-3
+Project-URL: Bug Tracker, https://bugs.tryton.org/
+Project-URL: Documentation, https://docs.tryton.org/
+Project-URL: Forum, https://www.tryton.org/forum
+Project-URL: Source Code, https://code.tryton.org/tryton
+Keywords: business application platform ERP
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Environment :: Console
+Classifier: Environment :: No Input/Output (Daemon)
+Classifier: Framework :: Tryton
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)
+Classifier: Natural Language :: Bulgarian
+Classifier: Natural Language :: Catalan
+Classifier: Natural Language :: Chinese (Simplified)
+Classifier: Natural Language :: Czech
+Classifier: Natural Language :: Dutch
+Classifier: Natural Language :: English
+Classifier: Natural Language :: Finnish
+Classifier: Natural Language :: French
+Classifier: Natural Language :: German
+Classifier: Natural Language :: Hungarian
+Classifier: Natural Language :: Indonesian
+Classifier: Natural Language :: Italian
+Classifier: Natural Language :: Persian
+Classifier: Natural Language :: Polish
+Classifier: Natural Language :: Portuguese (Brazilian)
+Classifier: Natural Language :: Romanian
+Classifier: Natural Language :: Russian
+Classifier: Natural Language :: Slovenian
+Classifier: Natural Language :: Spanish
+Classifier: Natural Language :: Turkish
+Classifier: Natural Language :: Ukrainian
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Topic :: Software Development :: Libraries :: Application Frameworks
+Requires-Python: >=3.8
+License-File: LICENSE
+Requires-Dist: defusedxml
+Requires-Dist: lxml (>=2.0)
+Requires-Dist: relatorio[fodt] (>=0.7.0)
+Requires-Dist: Genshi
+Requires-Dist: python-dateutil
+Requires-Dist: polib
+Requires-Dist: python-sql (>=1.3)
+Requires-Dist: werkzeug (>=0.12)
+Requires-Dist: passlib (>=1.7.0)
+Requires-Dist: pytz ; python_version < "3.9"
+Provides-Extra: argon2
+Requires-Dist: passlib[argon2] ; extra == 'argon2'
+Provides-Extra: bcrypt
+Requires-Dist: passlib[bcrypt] ; extra == 'bcrypt'
+Provides-Extra: levenshtein
+Requires-Dist: python-Levenshtein ; extra == 'levenshtein'
+Provides-Extra: postgresql
+Requires-Dist: psycopg2 (>=2.7.0) ; extra == 'postgresql'
+Provides-Extra: barcode
+Requires-Dist: python-barcode[images] ; extra == 'barcode'
+Provides-Extra: completion
+Requires-Dist: argcomplete ; extra == 'completion'
+Provides-Extra: coroutine
+Requires-Dist: gevent (>=1.1) ; extra == 'coroutine'
+Provides-Extra: graphviz
+Requires-Dist: pydot ; extra == 'graphviz'
+Provides-Extra: html2text
+Requires-Dist: html2text ; extra == 'html2text'
+Provides-Extra: image
+Requires-Dist: pillow ; extra == 'image'
+Provides-Extra: qrcode
+Requires-Dist: qrcode[pil] ; extra == 'qrcode'
+Requires-Dist: webcolors ; extra == 'qrcode'
+Provides-Extra: test
+Requires-Dist: pillow ; extra == 'test'
+Provides-Extra: weasyprint
+Requires-Dist: weasyprint ; extra == 'weasyprint'
+
+trytond
+=======
+
+The server of Tryton.
+Tryton is business software, ideal for companies of any size, easy to use,
+complete and 100% Open Source.
+It provides modularity, scalability and security.

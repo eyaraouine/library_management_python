@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name"/>
+    <field name="name"/>
+    <label name="gender"/>
+    <field name="gender"/>
+    <separator id="dates" string="Dates" colspan="4"/>
+    <label name="birth_date"/>
+    <field name="birth_date"/>
+    <label name="death_date"/>
+    <field name="death_date"/>
+    <label name="age"/>
+    <field name="age"/>
+    <newline/>
+    <label name="number_of_books"/>
+    <field name="number_of_books"/>
+    <label name="latest_book"/>
+    <field name="latest_book"/>
+    <field name="books" colspan="2"/>
+    <field name="genres" colspan="2"/>
+</form>

@@ -1,0 +1,54 @@
+Metadata-Version: 2.1
+Name: relatorio
+Version: 0.10.1
+Summary: A templating library able to output odt and pdf files
+Home-page: https://pypi.python.org/pypi/relatorio
+Download-URL: https://downloads.tryton.org/relatorio/
+Author: Tryton
+Author-email: relatorio@tryton.org
+License: GPL License
+Project-URL: Bug Tracker, https://relatorio.tryton.org/
+Project-URL: Documentation, https://relatorio.readthedocs.org/
+Project-URL: Forum, https://discuss.tryton.org/tags/relatorio
+Project-URL: Source Code, https://hg.tryton.org/relatorio/
+Keywords: templating OpenDocument PDF
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Text Processing
+Requires-Python: >=3.5
+License-File: LICENSE
+Requires-Dist: Genshi (>=0.5)
+Requires-Dist: lxml (>=2.0)
+Provides-Extra: chart
+Requires-Dist: pycha (>=0.4.0) ; extra == 'chart'
+Requires-Dist: pyyaml ; extra == 'chart'
+Provides-Extra: fodt
+Requires-Dist: python-magic ; extra == 'fodt'
+
+Relatorio
+=========
+
+Relatorio is a templating library which provides a way to easily output several
+kinds of files (odt, ods, png, svg, ...). Support for more filetypes can
+be easily added by creating plugins for them.
+
+Relatorio also provides a report repository allowing you to link python objects
+and report together, find reports by mimetype/name/python object.
+
+Documenation
+============
+
+The documenation is provided at http://relatorio.readthedocs.org/
+
+

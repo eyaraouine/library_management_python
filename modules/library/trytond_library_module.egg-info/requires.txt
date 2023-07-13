@@ -1,0 +1,2 @@
+python-sql>=0.9
+trytond<6.9,>=6.8
