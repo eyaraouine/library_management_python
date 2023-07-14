@@ -46,6 +46,63 @@
         </record>
         <menuitem parent="library.menu_library" sequence="40" action="act_open_late_users" id="menu_open_late_users"/>
         <!-- ############ -->
+        <!-- # User Subscription # -->
+        <!-- ############ -->  
+        <record model="ir.ui.view" id="user_subscription_view_form">
+            <field name="model">library.user.subscription</field>
+            <field name="type">form</field>
+            <field name="name">user_subscription_form</field>
+        </record>
+        <record model="ir.ui.view" id="user_subscription_view_list">
+            <field name="model">library.user.subscription</field>
+            <field name="type">tree</field>
+            <field name="name">user_subscription_list</field>
+        </record>
+        <record model="ir.action.act_window" id="act_open_user_subscription">
+            <field name="name">Abonnement</field>
+            <field name="res_model">library.user.subscription</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_open_user_subscription_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="user_subscription_view_list"/>
+            <field name="act_window" ref="act_open_user_subscription"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_open_user_subscription_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="user_subscription_view_form"/>
+            <field name="act_window" ref="act_open_user_subscription"/>
+        </record>
+        <!-- ############ -->
+        <!-- # User Subscription Config # -->
+        <!-- ############ -->  
+           <record model="ir.ui.view" id="user_subscription_config_view_form">
+            <field name="model">library.user.subscription.config</field>
+            <field name="type">form</field>
+            <field name="name">subscription_config_form</field>
+        </record>
+        <record model="ir.ui.view" id="user_subscription_config_view_list">
+            <field name="model">library.user.subscription.config</field>
+            <field name="type">tree</field>
+            <field name="name">subscription_config_list</field>
+        </record>
+         <record model="ir.action.act_window" id="act_open_user_subscription_config">
+            <field name="name">Paramètrage abonnement</field>
+            <field name="res_model">library.user.subscription.config</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_open_user_subscription_config_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="user_subscription_config_view_list"/>
+            <field name="act_window" ref="act_open_user_subscription_config"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_open_user_subscription_config_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="user_subscription_config_view_form"/>
+            <field name="act_window" ref="act_open_user_subscription_config"/>
+        </record>
+      <menuitem parent="library.menu_library_configuration" sequence="3" action="act_open_user_subscription_config" id="menu_user_subscription_config"/> 
+    
+   
+        <!-- ############ -->
         <!-- # Checkout # -->
         <!-- ############ -->
         <record model="ir.ui.view" id="user_checkout_view_form">
@@ -165,5 +222,6 @@
             <field name="model">library.book,-1</field>
             <field name="action" ref="act_open_book_checkouts"/>
         </record>
-    </data>
+        
+     </data>
 </tryton>

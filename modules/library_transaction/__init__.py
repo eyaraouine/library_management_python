@@ -10,11 +10,16 @@ def register():
         library.Checkout,
         library.Book,
         library.Exemplary,
+        library.Subscription,
+        library.SubcriptionConfiguration,
         wizard.BorrowSelectBooks,
         wizard.ReturnSelectCheckouts,
-        module='library_borrow', type_='model')
+        module='library_transaction', type_='model')
 
     Pool.register(
         wizard.Borrow,
         wizard.Return,
-        module='library_borrow', type_='wizard')
+        module='library_transaction', type_='wizard')
+    
+        
+   

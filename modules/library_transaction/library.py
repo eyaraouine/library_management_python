@@ -16,15 +16,18 @@ __all__ = [
     'Checkout',
     'Book',
     'Exemplary',
+    'Subscription',
+    'SubcriptionConfiguration'
     ]
 
 
 class User(ModelSQL, ModelView):
     'Library User'
     __name__ = 'library.user'
+    _rec_name = 'name'
 
-    checkouts = fields.One2Many('library.user.checkout', 'user', 'Emprunts')
     name = fields.Char('Nom', required=True)
+    cin = fields.Char('Numéro de la carte d\'identité')
     email = fields.Char('Email', required=True)
     adress = fields.Char('Adresse')
     phone = fields.Char('Numéro de téléphone', required=True)
@@ -32,6 +35,7 @@ class User(ModelSQL, ModelView):
             If(~Eval('registration_date'), [],
                 [('registration_date', '<=', Date())])],
         help='La date à laquelle le client s\'est inscris dans la bibliothéque')
+    checkouts = fields.One2Many('library.user.checkout', 'user', 'Emprunts associés')
     checkedout_books = fields.Function(
         fields.Integer('Livres rendus', help='Le nombre de livres que le client '
             'a récemment rendu'),
@@ -45,6 +49,11 @@ class User(ModelSQL, ModelView):
             'est (ou était) supposé rendre ses livres'),
         'getter_checkedout_books', searcher='search_expected_return_date')
 
+
+    @classmethod
+    def default_registration_date(cls):
+        return datetime.date.today()
+    
     @classmethod
     def getter_checkedout_books(cls, users, name):
         checkout = Pool().get('library.user.checkout').__table__()
@@ -109,9 +118,9 @@ class Checkout(ModelSQL, ModelView):
     __name__ = 'library.user.checkout'
 
     user = fields.Many2One('library.user', 'Client', required=True,
-        ondelete='CASCADE', select=True)
+        ondelete='CASCADE')
     exemplary = fields.Many2One('library.book.exemplary', 'Exemplaire',
-        required=True, ondelete='CASCADE', select=True)
+        required=True, ondelete='CASCADE')
     date = fields.Date('Date d\'emprunt', required=True, domain=[
             ('date', '<=', Date())])
     return_date = fields.Date('Date de retour effective', domain=[
@@ -180,6 +189,7 @@ class Book(metaclass=PoolMeta):
             ).select(book.id,
             where=(checkout.return_date != Null) | (checkout.id == Null))
         return [('id', 'in' if value else 'not in', query)]
+    
 
 
 class Exemplary(metaclass=PoolMeta):
@@ -235,3 +245,83 @@ class Exemplary(metaclass=PoolMeta):
             ).select(exemplary.id,
             where=(checkout.return_date != Null) | (checkout.id == Null))
         return [('id', 'in' if value else 'not in', query)]
+
+
+class Subscription(ModelView,ModelSQL):
+      'User Subscription'
+      __name__ = 'library.user.subscription'
+
+      start_date = fields.Date('Date de début', required=True)
+      expiration_date = fields.Function(fields.Date('Date d\'expiration'),'on_change_with_expiration_date')
+      subscription_type = fields.Selection([('annuel', 'Annuel'), ('mensuel', 'Mensuel'),('trimestriel','Trimestriel'),['semestriel','Semestriel']] , 'Type d\'abonnement',required=True)
+      status = fields.Function(fields.Boolean('Est encore valable'),'getter_status')
+      config = fields.Many2One('library.user.subscription.config', 'Paramètrage Abonnement', required=True,
+        ondelete='CASCADE')
+      subscription_fee = fields.Function(fields.Numeric('Frais total', digits=(16,2)),'on_change_with_subscription_fee')
+    
+      def default_start_date(self):
+          return datetime.date.today()
+      
+      def getter_subscription_fee(self, name):
+        if self.subscription_type == 'annuel':
+         return self.config.unit_subscription_fee*12*(1-(self.discount_annual_subscription_fee/100))  
+        elif self.subscription_type == 'mensuel':
+          return  self.config.unit_subscription_fee
+        elif self.subscription_type == 'trimestriel':
+               return  self.config.unit_subscription_fee*3*(1-(self.discount_trimestrial_subscription_fee/100)) 
+        else:
+              return self.config.unit_subscription_fee*6*(1-(self.discount_semestrial_subscription_fee/100)) 
+    
+          
+        
+      def getter_status(self, name):
+          if self.expiration_date < datetime.date.today():
+              return False
+          return True
+      
+      @fields.depends('subscription_type', 'start_date')
+      def on_change_with_expiration_date(self, name=None):
+       if self.subscription_type and self.start_date:
+         if self.subscription_type == 'annuel':
+            duration = datetime.timedelta(days=365)
+         elif self.subscription_type == 'mensuel':
+            duration = datetime.timedelta(days=30)
+         elif self.subscription_type == 'trimestriel':
+            duration = datetime.timedelta(days=90)
+         elif self.subscription_type == 'semestriel':
+            duration = datetime.timedelta(days=180)
+         else:
+            return  
+
+         expiration_date = self.start_date + duration
+         return expiration_date
+     
+            
+              
+class SubcriptionConfiguration(ModelSQL, ModelView):
+    'User Subscription Configuration '
+    __name__ = 'library.user.subscription.config'
+
+    unit_subscription_fee = fields.Numeric('Prix d\'abonnement mensuel', digits=(16,2), required=True)
+    discount_trimestrial_subscription_fee = fields.Numeric('Remise pour le prix trimestriel', digits=(16,2), required=True)
+    discount_semestrial_subscription_fee = fields.Numeric('Remise pour le prix semestriel', digits=(16,2), required=True)
+    discount_annual_subscription_fee = fields.Numeric('Remise pour le prix annuel', digits=(16,2), required=True)
+    subscriptions = fields.One2Many('library.user.subscription','config','Abonnements')
+
+    
+
+
+
+
+              
+                 
+ 
+
+
+
+
+
+
+    
+
+    

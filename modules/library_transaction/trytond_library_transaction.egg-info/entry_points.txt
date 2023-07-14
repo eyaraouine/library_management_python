@@ -1,0 +1,4 @@
+
+    [trytond.modules]
+    library_transaction = trytond.modules.library_transaction
+    

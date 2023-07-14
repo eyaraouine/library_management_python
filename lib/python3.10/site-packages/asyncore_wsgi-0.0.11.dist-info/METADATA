@@ -1,0 +1,64 @@
+Metadata-Version: 2.1
+Name: asyncore-wsgi
+Version: 0.0.11
+Summary: Asynchronous WSGI and WebSocket server based on asyncore module
+Home-page: https://github.com/romanvm/asyncore-wsgi
+Author: Roman Miroshnychenko
+Author-email: roman1972@gmail.com
+License: MIT
+Keywords: wsgi web server
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: WSGI :: Server
+Requires-Python: >=3.6
+Description-Content-Type: text/x-rst
+License-File: LICENSE.txt
+
+asyncore-wsgi
+=============
+
+This is a single-threaded asynchronous WSGI server with WebSockets support
+based on `asyncore <https://docs.python.org/3.6/library/asyncore.html>`_ module.
+It should be compatible with Python 2.7 and 3.
+
+Example:
+
+.. code-block:: python
+
+    from from wsgiref.simple_server import demo_app
+    from asyncore_wsgi import AsyncWebSocketHandler, make_server
+
+
+    class SimpleEchoHandler(AsyncWebSocketHandler):
+
+        def handleMessage(self):
+            print('Received WebSocket message: {}'.format(self.data))
+            self.sendMessage(self.data)
+
+        def handleConnected(self):
+            print('WebSocket connected')
+
+        def handleClose(self):
+            print('WebSocket closed')
+
+
+    httpd = make_server('', 8000, demo_app, ws_handler_class=SimpleEchoHandler)
+    httpd.serve_forever()
+
+The server in the preceding example serves a demo WSGI app from
+the Standard Library and the echo WebSocket handler on ``'/ws'`` path.
+
+WebSocket part was borrowed from
+`this project <https://github.com/dpallot/simple-websocket-server>`_.
+
+License
+-------
+
+MIT, see LICENSE.txt

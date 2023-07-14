@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<form>
+    <label name="name" xalign='0.0'/>
+    <field name="name" colspan="3"/>
+    <label name="cin" xalign='0.0'/>
+    <field name="cin" colspan="3"/>
+     <label name="adress" xalign='0.0'/>
+    <field name="adress" colspan="3"/>
+     <label name="email" xalign='0.0'/>
+    <field name="email" colspan="3"/>
+    <label name="phone" xalign='0.0'/>
+    <field name="phone" colspan="3"/>
+    <label name="registration_date" xalign='0.0'/>
+    <field name="registration_date" colspan="3"/>
+    <label name="checkedout_books" xalign='0.0'/>
+    <field name="checkedout_books"/>
+    <label name="late_checkedout_books" xalign='0.0'/>
+    <field name="late_checkedout_books"/>
+    <label name="expected_return_date" xalign='0.0'/>
+    <field name="expected_return_date"/>
+</form>

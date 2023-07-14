@@ -74,7 +74,7 @@ class Author(ModelSQL, ModelView):
     __name__ = 'library.author'
 
     books = fields.One2Many('library.book', 'author', 'Livres')
-    name = fields.Char('Name', required=True)
+    name = fields.Char('Nom', required=True)
     birth_date = fields.Date('Date de naissance',
         states={'required': Bool(Eval('death_date', 'False'))},
         depends=['death_date'])
@@ -85,7 +85,7 @@ class Author(ModelSQL, ModelView):
         depends=['birth_date'])
     gender = fields.Selection([('homme', 'Homme'), ('femme', 'Femme')], 'Sexe')
     age = fields.Function(
-        fields.Integer('Age', states={'invisible': ~Eval('death_date')}),
+        fields.Integer('Age'),
         'on_change_with_age')
     number_of_books = fields.Function(
         fields.Integer('Nombre de livres'),

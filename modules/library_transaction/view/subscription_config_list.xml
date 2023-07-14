@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="unit_subscription_fee" />
+    <field name="discount_trimestrial_subscription_fee" />
+    <field name="discount_semestrial_subscription_fee" />
+    <field name="discount_annual_subscription_fee" /> 
+</tree>

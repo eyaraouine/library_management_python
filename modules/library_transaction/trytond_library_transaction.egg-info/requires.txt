@@ -1,0 +1,3 @@
+python-sql>=0.9
+trytond<6.9,>=6.8
+trytond_library_module<6.9,>=6.8

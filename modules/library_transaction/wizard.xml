@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <tryton>
-    <data>
-        <!-- ########## -->
+  <data>
+     <!-- ########## -->
         <!-- # Borrow # -->
         <!-- ########## -->
         <record model="ir.action.wizard" id="act_library_user_borrow">

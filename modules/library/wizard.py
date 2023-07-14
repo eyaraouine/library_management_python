@@ -7,7 +7,7 @@ from trytond.model import ModelView, fields
 from trytond.wizard import Wizard, StateView, StateTransition, StateAction
 from trytond.wizard import Button
 from trytond.exceptions import UserWarning, UserError
-
+import web_pdb
 __all__ = [
     'CreateExemplaries',
     'CreateExemplariesParameters',
@@ -33,15 +33,16 @@ class CreateExemplaries(Wizard):
     @classmethod
     def __setup__(cls):
         super().__setup__()
-        cls._error_messages={}
+        """
         cls._error_messages.update({
                 'invalid_model': 'This action should be started from a book',
                 'invalid_date': 'You cannot purchase books in the future',
                 })
+        """        
 
     def default_parameters(self, name):
         if Transaction().context.get('active_model', '') != 'library.book':
-            self.raise_user_error('invalid_model')
+            raise UserError('Cette action doit être déclenché du model Livre')
         return {
             'acquisition_date': datetime.date.today(),
             'book': Transaction().context.get('active_id'),
@@ -51,7 +52,7 @@ class CreateExemplaries(Wizard):
     def transition_create_exemplaries(self):
         if (self.parameters.acquisition_date and
                 self.parameters.acquisition_date > datetime.date.today()):
-            self.raise_user_error('invalid_date')
+            raise UserError('On ne peut pas programmer l\'achat d\'un livre ')
         Exemplary = Pool().get('library.book.exemplary')
         to_create = []
         while len(to_create) < self.parameters.number_of_exemplaries:
@@ -79,10 +80,10 @@ class CreateExemplariesParameters(ModelView):
     book = fields.Many2One('library.book', 'Livre', readonly=True)
     number_of_exemplaries = fields.Integer('Nombre d\'exemplaires',
         required=True, domain=[('number_of_exemplaries', '>', 0)],
-        help='The number of exemplaries that will be created')
-    identifier_start = fields.Char('Débit de l\'identifiant ', required=True,
-        help='The starting point for exemplaries identifiers')
-    acquisition_date = fields.Date('Acquisition Date')
+        help='Le nombre d\'exemplaires qui vont être crées')
+    identifier_start = fields.Char('Début de l\'identifiant ', required=True,
+        help='Les premiers chiffres de l\'identifiant à générer')
+    acquisition_date = fields.Date(' Date d\'acquisition')
     acquisition_price = fields.Numeric('Prix d\'acquisition ', digits=(16, 2),
         domain=[('acquisition_price', '>=', 0)],
         help='Le prix d\'achat de l\'exemplaire')
@@ -114,7 +115,7 @@ class FuseBooks(Wizard):
     @classmethod
     def __setup__(cls):
         super().__setup__()
-        cls._error_messages={}
+      
         """ 
         cls._error_messages.update({
                 'invalid_model': 'L\'action should be started from a bookshould be started from a bookdoit être',
@@ -126,7 +127,7 @@ class FuseBooks(Wizard):
         """
     def transition_check_authors(self):
         if Transaction().context.get('active_model', '') != 'library.book':
-            raise UserError('L\'action should be started from a bookshould be started from a bookdoit être')
+            raise UserError('L\'action doit être déclenché à partir du modéle Livre ')
         Book = Pool().get('library.book')
         books = Book.browse(Transaction().context.get('active_ids'))
         if len({x.author for x in books}) != 1:
@@ -146,14 +147,27 @@ class FuseBooks(Wizard):
             }
 
     def transition_check_compatibility(self):
+        pool = Pool()
+        Warning = pool.get('res.user.warning')
+        web_pdb.set_trace(port=8251)
         values = self._get_merge_values()
         bad_matches = [k for k, v in values.items() if not v[1]]
-        if bad_matches:
-            raise UserWarning('bad_matches_warning' + str(
-                    self.select_main.main_book.id),'Les champs suivants ne matchent pas trés bien ensemble:  '
-                ' %(fields)s',
-                {'fields': ', '.join(bad_matches)})
+
+        # if bad_matches:
+        #     warning_name = Warning.format('Alerte Matching',[self])
+        #     if Warning.check(warning_name):
+        # #   
+        # #  warning_message = 'Les champs suivants ne matchent pas très bien ensemble: {fields}'.format(fields=', '.join(bad_matches))
+        # #     Warning.create({
+        # #         'name': warning_name,
+        # #         'message': warning_message,
+        # #         'user': self.select_main.user.id
+        # #     })
+
+        #         raise UserWarning(warning_name, 'warning_message')
         return 'preview'
+            
+
 
     def _get_merge_fields(self):
         return ['isbn', 'editor', 'genre', 'summary', 'description',
@@ -214,8 +228,8 @@ class FuseBooksSelectMain(ModelView):
     main_book = fields.Many2One('library.book', 'Livre principal', required=True,
         domain=[('id', 'in', Eval('selected_books'))])
     selected_books = fields.Many2Many('library.book', None, None,
-        'Selected books', readonly=True)
-    number_of_exemplaries = fields.Integer('Nombre d\' exemplaires',
+        'Livres Séléctionnés', readonly=True)
+    number_of_exemplaries = fields.Integer('Nombre d\'exemplaires',
         readonly=True)
 
 
@@ -227,3 +241,4 @@ class FuseBooksPreview(ModelView):
         readonly=True)
     number_of_exemplaries = fields.Integer('Nombre d\' exemplaires',
         readonly=True)
+    

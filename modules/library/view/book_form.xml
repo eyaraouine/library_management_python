@@ -4,17 +4,17 @@
         <field name="cover" widget="image"/>
     </group>
     <group id="right" string="" colspan="3" col="2" yfill="1">
-        <label name="title"/>
+        <label name="title" xalign='0.0'/>
         <field name="title"/>
-        <label name="author"/>
+        <label name="author" xalign='0.0'/>
         <field name="author"/>
-        <label name="genre"/>
-        <field name="genre" widget="selection"/>
-        <label name="editor"/>
+         <label name="editor" xalign='0.0'/>
         <field name="editor"/>
-        <label name="publishing_date"/>
+        <label name="genre" xalign='0.0'/>
+        <field name="genre" widget="selection"/>
+        <label name="publishing_date" xalign='0.0'/>
         <field name="publishing_date"/>
-        <label name="isbn"/>
+        <label name="isbn" xalign='0.0'/>
         <field name="isbn"/>
     </group>
     <notebook colspan="4">
@@ -24,16 +24,16 @@
             <separator name="summary" colspan="2"/>
             <field name="summary" colspan="2"/>
         </page>
-        <page id="other_data" string="Other informations">
-            <label name="page_count"/>
+        <page id="other_data" string="Autres informations">
+            <label name="page_count" xalign='0.0'/>
             <field name="page_count"/>
-            <label name="edition_stopped"/>
+            <label name="edition_stopped" xalign='0.0'/>
             <field name="edition_stopped"/>
             <label name="number_of_exemplaries"/>
             <field name="number_of_exemplaries"/>
-            <label name="latest_exemplary"/>
+            <label name="latest_exemplary" />
             <field name="latest_exemplary"/>
         </page>
     </notebook>
-    <button string="Create exemplaries" name="create_exemplaries" icon="tryton-new" colspan="4"/>
+    <button string="Créer exemplaires" name="create_exemplaries" icon="tryton-new" colspan="4"/>
 </form>
