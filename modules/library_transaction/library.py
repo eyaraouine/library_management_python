@@ -48,6 +48,9 @@ class User(ModelSQL, ModelView):
         fields.Date('Date de retour prévue', help='La date que le client '
             'est (ou était) supposé rendre ses livres'),
         'getter_checkedout_books', searcher='search_expected_return_date')
+    #subscription = fields.One2One(origin='library.user.subscription',target='user',string='Abonnement')
+    #subscription = fields.One2One('library.user.subscription', 'user', target='library.user', relation_name='user_subscription_relation', string='Abonnement')
+    #subscription = fields.One2One(origin='library.user.subscription',target= 'user', string='Abonnement')
 
 
     @classmethod
@@ -77,12 +80,12 @@ class User(ModelSQL, ModelView):
         column, where = None, None
         if name == 'checkedout_books':
             column = Count(checkout_table.id)
-            where = checkout_table.return_date == Null
+            where = checkout_table.return_date != None
         elif name == 'late_checkedout_books':
             column = Count(checkout_table.id)
-            where = (checkout_table.return_date == Null) & (
-                checkout_table.date < datetime.date.today() +
-                datetime.timedelta(days=20))
+            where = ((checkout_table.return_date != None) &
+        (checkout_table.date +datetime.timedelta(days=20) <datetime.date.today() +
+                datetime.timedelta(days=20)))
         elif name == 'expected_return_date':
             column = Min(checkout_table.date)
             where = checkout_table.return_date == Null
@@ -111,7 +114,12 @@ class User(ModelSQL, ModelView):
             group_by=user.id,
             having=Operator(Min(checkout.date), value))
         return [('id', 'in', query)]
-
+    
+    
+    @classmethod
+    @ModelView.button_action('library.act_open_user_subscription')
+    def create_subscription(cls, subscription):
+        pass
 
 class Checkout(ModelSQL, ModelView):
     'Checkout'
@@ -255,25 +263,42 @@ class Subscription(ModelView,ModelSQL):
       expiration_date = fields.Function(fields.Date('Date d\'expiration'),'on_change_with_expiration_date')
       subscription_type = fields.Selection([('annuel', 'Annuel'), ('mensuel', 'Mensuel'),('trimestriel','Trimestriel'),['semestriel','Semestriel']] , 'Type d\'abonnement',required=True)
       status = fields.Function(fields.Boolean('Est encore valable'),'getter_status')
-      config = fields.Many2One('library.user.subscription.config', 'Paramètrage Abonnement', required=True,
+      config = fields.Many2One('library.user.subscription.config', 'Paramètrage Abonnement',
         ondelete='CASCADE')
-      subscription_fee = fields.Function(fields.Numeric('Frais total', digits=(16,2)),'on_change_with_subscription_fee')
+      subscription_fee = fields.Function(fields.Numeric('Frais total', digits=(16,2)),'getter_subscription_fee')
+      #user = fields.One2One(origin='library.user', target='subscription', string='Client')
+     #class trytond.model.fields.One2One(, , , string[, datetime_field[, \**options]])¶
+      #user = fields.One2One('library.user', 'subscription', target='library.user.subscription', string='CLient')
+      @classmethod
+      def default_start_date(cls):
+       return datetime.date.today()
+
+     
+      @classmethod
+      def getter_subscription_fee(cls, subscriptions, name):
+        result = {x.id: None for x in subscriptions}
+        Config   = Pool().get('library.user.subscription.config')
+        config = Config.search([], limit=1)
+        first_config = config[0]
+        unit_subscription_fee = first_config.unit_subscription_fee
+        discount_annual_subscription_fee = first_config.discount_annual_subscription_fee
+        discount_trimestrial_subscription_fee = first_config.discount_trimestrial_subscription_fee
+        discount_semestrial_subscription_fee = first_config.discount_semestrial_subscription_fee
+        for subscription in subscriptions:
+         
+         subscription_type = subscription.subscription_type
+
+         if subscription_type == 'annuel':
+            result[subscription.id] = unit_subscription_fee * 12 * (1 - (discount_annual_subscription_fee / 100))
+         elif subscription_type == 'mensuel':
+            result[subscription.id] = unit_subscription_fee
+         elif subscription_type == 'trimestriel':
+            result[subscription.id] = unit_subscription_fee * 3 * (1 - (discount_trimestrial_subscription_fee / 100))
+         else:
+            result[subscription.id] = unit_subscription_fee * 6 * (1 - (discount_semestrial_subscription_fee / 100))
     
-      def default_start_date(self):
-          return datetime.date.today()
+         return result
       
-      def getter_subscription_fee(self, name):
-        if self.subscription_type == 'annuel':
-         return self.config.unit_subscription_fee*12*(1-(self.discount_annual_subscription_fee/100))  
-        elif self.subscription_type == 'mensuel':
-          return  self.config.unit_subscription_fee
-        elif self.subscription_type == 'trimestriel':
-               return  self.config.unit_subscription_fee*3*(1-(self.discount_trimestrial_subscription_fee/100)) 
-        else:
-              return self.config.unit_subscription_fee*6*(1-(self.discount_semestrial_subscription_fee/100)) 
-    
-          
-        
       def getter_status(self, name):
           if self.expiration_date < datetime.date.today():
               return False

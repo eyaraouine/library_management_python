@@ -72,6 +72,7 @@
             <field name="view" ref="user_subscription_view_form"/>
             <field name="act_window" ref="act_open_user_subscription"/>
         </record>
+        <menuitem parent="library.menu_library" sequence="50" action="act_open_user_subscription" id="menu_user_subscription"/>
         <!-- ############ -->
         <!-- # User Subscription Config # -->
         <!-- ############ -->  

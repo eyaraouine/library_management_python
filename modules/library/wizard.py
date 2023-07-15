@@ -25,7 +25,7 @@ class CreateExemplaries(Wizard):
     parameters = StateView('library.book.create_exemplaries.parameters',
         'library.create_exemplaries_parameters_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
-            Button('Create', 'create_exemplaries', 'tryton-go-next',
+            Button('Créer', 'create_exemplaries', 'tryton-go-next',
                 default=True)])
     create_exemplaries = StateTransition()
     open_exemplaries = StateAction('library.act_exemplary')

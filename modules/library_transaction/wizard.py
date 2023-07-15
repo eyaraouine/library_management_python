@@ -91,7 +91,7 @@ class BorrowSelectBooks(ModelView):
         'Exemplaires', required=True, domain=[('is_available', '=', True)])
     date = fields.Date('Date', required=True, domain=[('date', '<=', Date())])
     checkouts = fields.Many2Many('library.user.checkout', None, None,
-        'Checkouts', readonly=True)
+        'Emprunts', readonly=True)
 
 
 class Return(Wizard):
@@ -100,7 +100,7 @@ class Return(Wizard):
 
     start_state = 'select_checkouts'
     select_checkouts = StateView('library.user.return.checkouts',
-        'library_borrow.return_checkouts_view_form', [
+        'library_transaction.return_checkouts_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Retourner', 'return_', 'tryton-go-next', default=True)])
     return_ = StateTransition()
@@ -122,7 +122,7 @@ class Return(Wizard):
         if Transaction().context.get('active_model') == 'library.user':
             user = Transaction().context.get('active_id')
             checkouts = [x for x in Checkout.search([
-                        ('user', '=', user), ('return_date', '=', None)])]
+                        ('user', '=', user), ('return_date', '!=', None)])]
         elif (Transaction().context.get('active_model') ==
                 'library.user.checkout'):
             checkouts = Checkout.browse(
@@ -154,3 +154,76 @@ class ReturnSelectCheckouts(ModelView):
         'Checkouts', domain=[('user', '=', Eval('user')),
             ('return_date', '=', None)])
     date = fields.Date('Date', required=True, domain=[('date', '<=', Date())])
+
+
+class CreateSubscription(Wizard):
+    'Create Subscription'
+    __name__ = 'library.book.create_exemplaries'
+
+    start_state = 'parameters'
+    parameters = StateView('library.book.create_subscription.parameters',
+        'library_transaction.create_subscription_parameters_view_form', [
+            Button('Cancel', 'end', 'tryton-cancel'),
+            Button('Créer', 'create_subscription', 'tryton-go-next',
+                default=True)])
+    create_subscription = StateTransition()
+    open_subscriptions = StateAction('library_transaction.act_open_user_subscription')
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+       
+    def default_parameters(self, name):
+        if Transaction().context.get('active_model', '') != 'library.user':
+            raise UserError('Cette action doit être déclenché du model client')
+        return {
+            'start_date': datetime.date.today(),
+            'user': Transaction().context.get('active_id'),
+            'subscription_type':'mensuel'
+            }
+
+    def transition_create_subscription(self):
+      
+        Subscription = Pool().get('library.user.subscription')
+        subscription = Subscription()
+        subscription.user = self.parameters.user
+        subscription.start_date = self.parameters.start_date
+        subscription.subscription_type = self.parameters.subscription_type
+       
+        Subscription.save(subscription)
+
+        return 'open_subscription'
+
+    def do_open_subscription(self, action):
+    
+
+     subscription_id = self.create_subscription()
+   
+
+     return {
+        'name': 'Créer Abonnement',
+        'view_type': 'form',
+        'view_mode': 'form',
+        'res_model': 'library.user.subscription',
+        'res_id': subscription_id,
+        'views': [(False, 'form')],
+        'type': 'ir.actions.act_window',
+        'target': 'current',
+        'context': {
+            'form_view_ref': 'library_transaction.act_open_user_subscription_view_form',
+        },
+    }
+
+    
+
+class CreateSubscriptionParameters(ModelView):
+      'Create Subscription Parameters'
+      __name__ = 'library.user.create_subscription.parameters'
+
+      user = fields.Many2One('library.user', 'Client', readonly=True)
+      subscription_type = fields.Selection([('annuel', 'Annuel'), ('mensuel', 'Mensuel'),('trimestriel','Trimestriel'),('semestriel','Semestriel')], 'Type d\'abonnement',
+        required=True
+        )
+      start_date = fields.Date('Date de début de l\'abonnement ', required=True)
+    
+       

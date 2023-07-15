@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<form>
+    <label name="start_date" xalign='0.0'/>
+    <field name="start_date" colspan="3"/>
+    <label name="subscription_type" xalign='0.0'/>
+    <field name="subscription_type" colspan="3"/>
+     <label name="subscription_fee" xalign='0.0'/>
+    <field name="subscription_fee" colspan="3"/>
+    <label name="expiration_date" xalign='0.0'/>
+    <field name="expiration_date" colspan="3"/>
+    <label name="status" xalign='0.0'/>
+    <field name="status" colspan="3"/>
+ 
+</form>
+ 

@@ -14,11 +14,13 @@ def register():
         library.SubcriptionConfiguration,
         wizard.BorrowSelectBooks,
         wizard.ReturnSelectCheckouts,
+        wizard.CreateSubscriptionParameters,
         module='library_transaction', type_='model')
 
     Pool.register(
         wizard.Borrow,
         wizard.Return,
+        wizard.CreateSubscription,
         module='library_transaction', type_='wizard')
     
         
