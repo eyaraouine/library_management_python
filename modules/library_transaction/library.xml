@@ -59,7 +59,7 @@
             <field name="name">user_subscription_list</field>
         </record>
         <record model="ir.action.act_window" id="act_open_user_subscription">
-            <field name="name">Abonnement</field>
+            <field name="name">Abonnements</field>
             <field name="res_model">library.user.subscription</field>
         </record>
         <record model="ir.action.act_window.view" id="act_open_user_subscription_view_list">

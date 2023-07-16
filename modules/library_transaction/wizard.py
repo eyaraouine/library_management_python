@@ -1,5 +1,4 @@
 import datetime
-
 from trytond.pool import Pool
 from trytond.model import ModelView, fields
 from trytond.transaction import Transaction
@@ -108,13 +107,8 @@ class Return(Wizard):
     @classmethod
     def __setup__(cls):
         super().__setup__()
-        """
-        cls._error_messages.update({
-                'multiple_users': 'You cannot return checkouts from different '
-                'users at once',
-                'available': 'Cannot return an available exemplary',
-                })
-        """
+    
+    
     def default_select_checkouts(self, name):
         Checkout = Pool().get('library.user.checkout')
         user = None
@@ -122,7 +116,7 @@ class Return(Wizard):
         if Transaction().context.get('active_model') == 'library.user':
             user = Transaction().context.get('active_id')
             checkouts = [x for x in Checkout.search([
-                        ('user', '=', user), ('return_date', '!=', None)])]
+                        ('user', '=', user), ('return_date', '=', None)])]
         elif (Transaction().context.get('active_model') ==
                 'library.user.checkout'):
             checkouts = Checkout.browse(
@@ -151,23 +145,25 @@ class ReturnSelectCheckouts(ModelView):
 
     user = fields.Many2One('library.user', 'User', required=True)
     checkouts = fields.Many2Many('library.user.checkout', None, None,
-        'Checkouts', domain=[('user', '=', Eval('user')),
-            ('return_date', '=', None)])
+        'Emprunts', domain=[('user', '=', Eval('user')),
+            ('return_date', '=', None)],   depends=['user'])
     date = fields.Date('Date', required=True, domain=[('date', '<=', Date())])
 
 
 class CreateSubscription(Wizard):
     'Create Subscription'
-    __name__ = 'library.book.create_exemplaries'
+    __name__ = 'library.user.create_subscription'
 
     start_state = 'parameters'
-    parameters = StateView('library.book.create_subscription.parameters',
+    parameters = StateView('library.user.create_subscription.parameters',
         'library_transaction.create_subscription_parameters_view_form', [
             Button('Cancel', 'end', 'tryton-cancel'),
             Button('Créer', 'create_subscription', 'tryton-go-next',
                 default=True)])
     create_subscription = StateTransition()
-    open_subscriptions = StateAction('library_transaction.act_open_user_subscription')
+    open_subscription = StateAction('library_transaction.act_open_user_subscription')
+    created_subscription_id = None
+
 
     @classmethod
     def __setup__(cls):
@@ -190,22 +186,23 @@ class CreateSubscription(Wizard):
         subscription.start_date = self.parameters.start_date
         subscription.subscription_type = self.parameters.subscription_type
        
-        Subscription.save(subscription)
+        subscription.save()
+        self.created_subscription_id = subscription.id
 
         return 'open_subscription'
 
+    """
     def do_open_subscription(self, action):
     
 
-     subscription_id = self.create_subscription()
-   
+  
 
      return {
         'name': 'Créer Abonnement',
         'view_type': 'form',
         'view_mode': 'form',
         'res_model': 'library.user.subscription',
-        'res_id': subscription_id,
+        'res_id':  self.created_subscription_id ,
         'views': [(False, 'form')],
         'type': 'ir.actions.act_window',
         'target': 'current',
@@ -213,6 +210,26 @@ class CreateSubscription(Wizard):
             'form_view_ref': 'library_transaction.act_open_user_subscription_view_form',
         },
     }
+    """
+    def do_open_subscription(self, action):
+     if action and isinstance(action, list) and len(action) > 0:
+        action = action[0]
+        action.setdefault('name', 'Créer Abonnement')
+        action.setdefault('view_type', 'form')
+        action.setdefault('view_mode', 'form')
+        action.setdefault('res_model', 'library.user.subscription')
+        action.setdefault('res_id', self.created_subscription_id)
+        action.setdefault('views', [(False, 'form')])
+        action.setdefault('type', 'ir.actions.act_window')
+        action.setdefault('target', 'current')
+        action.setdefault('context', {
+            'form_view_ref': 'library_transaction.act_open_user_subscription_view_form',
+        })
+
+     return action, {}
+
+
+
 
     
 
@@ -225,5 +242,6 @@ class CreateSubscriptionParameters(ModelView):
         required=True
         )
       start_date = fields.Date('Date de début de l\'abonnement ', required=True)
+      
     
        

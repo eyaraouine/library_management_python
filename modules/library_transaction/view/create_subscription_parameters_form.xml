@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label name="user"/>
+    <field name="user" colspan="3"/>
+    <label name="start_date"/>
+    <field name="start_date"/>
+    <label name="subscription_type"/>
+    <field name="subscription_type"/> 
+</form>

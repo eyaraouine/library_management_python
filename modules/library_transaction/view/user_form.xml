@@ -18,4 +18,5 @@
     <field name="late_checkedout_books"/>
     <label name="expected_return_date" xalign='0.0'/>
     <field name="expected_return_date"/>
+    <button string="Créer un abonnement" name="create_subscription" icon="tryton-new" colspan="4"/>
 </form>

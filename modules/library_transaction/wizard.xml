@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <tryton>
   <data>
-     <!-- ########## -->
+        <!-- ########## -->
         <!-- # Borrow # -->
         <!-- ########## -->
         <record model="ir.action.wizard" id="act_library_user_borrow">
@@ -50,6 +50,26 @@
             <field name="model">library.user.return.checkouts</field>
             <field name="type">form</field>
             <field name="name">return_checkouts_form</field>
+        </record>
+        <!-- ###################### -->
+        <!-- # Create User Subscription  # -->
+        <!-- ###################### -->
+        <record model="ir.action.wizard" id="act_create_user_subscription">
+            <field name="name">Créer abonnement</field>
+            <field name="wiz_name">library.user.create_subscription</field>
+        </record>
+        <record model="ir.action.keyword" id="act_create_subscription_keyword">
+            <field name="keyword">form_action</field>
+            <field name="model">library.user,-1</field>
+            <field name="action" ref="act_create_user_subscription"/>
+        </record>
+        <!-- ################################# -->
+        <!-- # Create User Subscription Parameters # -->
+        <!-- ################################# -->
+        <record model="ir.ui.view" id="create_subscription_parameters_view_form">
+            <field name="model">library.user.create_subscription.parameters</field>
+            <field name="type">form</field>
+            <field name="name">create_subscription_parameters_form</field>
         </record>
     </data>
 </tryton>

@@ -3,6 +3,6 @@
     <field name="name" expand="1"/>
      <field name="cin" expand="1"/>
      <field name="phone" expand='1'/>
-    <field name="registration_date"/>
-    <field name="expected_return_date"/>
+    <button string="Renouveler abonnement" name="renew_subscription" icon="tryton-new" />
+   
 </tree>

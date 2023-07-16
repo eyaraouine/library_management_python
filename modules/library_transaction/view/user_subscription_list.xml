@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <tree> 
- 
+
+    <field name="user" />
     <field name="start_date" />
-    <field name="status" />
+    <field name="status"/>
     <field name="subscription_fee" />
 </tree>

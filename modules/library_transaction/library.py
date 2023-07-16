@@ -18,6 +18,7 @@ __all__ = [
     'Exemplary',
     'Subscription',
     'SubcriptionConfiguration'
+    'UserSubscriptionRelation'
     ]
 
 
@@ -48,10 +49,20 @@ class User(ModelSQL, ModelView):
         fields.Date('Date de retour prévue', help='La date que le client '
             'est (ou était) supposé rendre ses livres'),
         'getter_checkedout_books', searcher='search_expected_return_date')
-    #subscription = fields.One2One(origin='library.user.subscription',target='user',string='Abonnement')
-    #subscription = fields.One2One('library.user.subscription', 'user', target='library.user', relation_name='user_subscription_relation', string='Abonnement')
-    #subscription = fields.One2One(origin='library.user.subscription',target= 'user', string='Abonnement')
+   
+    subscription = fields.One2One('library.user_subscription_relation','user','subscription','Abonnement')
 
+
+    @classmethod
+    def __setup__(cls):
+     super().__setup__()
+     cls._buttons.update({
+                'create_subscription': {'invisible': ~Eval('subscription')},
+                'renew_subscription' : {'invisible': Eval('subscription')}
+                })
+     
+
+        
 
     @classmethod
     def default_registration_date(cls):
@@ -59,6 +70,7 @@ class User(ModelSQL, ModelView):
     
     @classmethod
     def getter_checkedout_books(cls, users, name):
+        
         checkout = Pool().get('library.user.checkout').__table__()
         cursor = Transaction().connection.cursor()
         default_value = None
@@ -84,7 +96,7 @@ class User(ModelSQL, ModelView):
         elif name == 'late_checkedout_books':
             column = Count(checkout_table.id)
             where = ((checkout_table.return_date != None) &
-        (checkout_table.date +datetime.timedelta(days=20) <datetime.date.today() +
+        (checkout_table.return_date > checkout_table.date +
                 datetime.timedelta(days=20)))
         elif name == 'expected_return_date':
             column = Min(checkout_table.date)
@@ -117,8 +129,13 @@ class User(ModelSQL, ModelView):
     
     
     @classmethod
-    @ModelView.button_action('library.act_open_user_subscription')
+    @ModelView.button_action('library_transaction.act_create_user_subscription')
     def create_subscription(cls, subscription):
+        pass
+      
+    @classmethod
+    @ModelView.button_action('library_transaction.act_open_user_subscription_view_form')
+    def renew_subscription(cls, subscription):
         pass
 
 class Checkout(ModelSQL, ModelView):
@@ -165,6 +182,7 @@ class Book(metaclass=PoolMeta):
 
     @classmethod
     def getter_is_available(cls, books, name):
+        
         pool = Pool()
         checkout = pool.get('library.user.checkout').__table__()
         exemplary = pool.get('library.book.exemplary').__table__()
@@ -266,9 +284,8 @@ class Subscription(ModelView,ModelSQL):
       config = fields.Many2One('library.user.subscription.config', 'Paramètrage Abonnement',
         ondelete='CASCADE')
       subscription_fee = fields.Function(fields.Numeric('Frais total', digits=(16,2)),'getter_subscription_fee')
-      #user = fields.One2One(origin='library.user', target='subscription', string='Client')
-     #class trytond.model.fields.One2One(, , , string[, datetime_field[, \**options]])¶
-      #user = fields.One2One('library.user', 'subscription', target='library.user.subscription', string='CLient')
+      user = fields.One2One('library.user_subscription_relation', 'subscription','user',  'Client')
+
       @classmethod
       def default_start_date(cls):
        return datetime.date.today()
@@ -332,6 +349,14 @@ class SubcriptionConfiguration(ModelSQL, ModelView):
     discount_semestrial_subscription_fee = fields.Numeric('Remise pour le prix semestriel', digits=(16,2), required=True)
     discount_annual_subscription_fee = fields.Numeric('Remise pour le prix annuel', digits=(16,2), required=True)
     subscriptions = fields.One2Many('library.user.subscription','config','Abonnements')
+
+class UserSubscriptionRelation(ModelSQL, ModelView): 
+    'Library User Subscription Relation'
+    __name__ = 'library.user_subscription_relation'
+    
+    user = fields.Many2One('library.user', 'Client')
+    subscription = fields.Many2One('library.user.subscription','Abonnement')
+        
 
     
 

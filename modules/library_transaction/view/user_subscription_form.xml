@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <form>
+    <label name="user" xalign='0.0'/>
+    <field name="user" colspan="3"/>
     <label name="start_date" xalign='0.0'/>
     <field name="start_date" colspan="3"/>
     <label name="subscription_type" xalign='0.0'/>

@@ -12,6 +12,7 @@ def register():
         library.Exemplary,
         library.Subscription,
         library.SubcriptionConfiguration,
+        library.UserSubscriptionRelation,
         wizard.BorrowSelectBooks,
         wizard.ReturnSelectCheckouts,
         wizard.CreateSubscriptionParameters,
