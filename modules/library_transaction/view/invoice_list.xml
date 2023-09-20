@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<tree>
+     
+    <field name="user" />    
+    <field name="invoice_date"/> 
+   <field name="total_HT_after_discount" />  
+  <field name="total_sale_price_TTC" /> 
+
+    
+</tree>    

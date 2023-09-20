@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<form>
+    <label name="user" xalign='0.0'/>   
+    <field name="user" colspan="4"/>   
+    <label name="invoice_date" xalign='0.0'/>   
+    <field name="invoice_date" colspan="4"/>  
+     <label name="total_sale_price_HT" xalign='0.0'/> 
+     <field name="total_sale_price_HT" /> 
+     <label name="total_HT_after_discount" xalign='0.0'/>    
+    <field name="total_HT_after_discount" />
+    <label name="total_sale_price_TTC" xalign='0.0'/> 
+     <field name="total_sale_price_TTC" /> 
+    <label name="invoice_lines" xalign='0.0'/>   
+    <field name="invoice_lines" colspan="4"/>   
+    <button name="generate_invoice_pdf" string="Générer La Facture PDF" />
+   
+</form>    

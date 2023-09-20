@@ -43,10 +43,13 @@ class CreateExemplaries(Wizard):
     def default_parameters(self, name):
         if Transaction().context.get('active_model', '') != 'library.book':
             raise UserError('Cette action doit être déclenché du model Livre')
+     
+
         return {
             'acquisition_date': datetime.date.today(),
             'book': Transaction().context.get('active_id'),
-            'acquisition_price': 0,
+            'acquisition_price': 0
+    
             }
 
     def transition_create_exemplaries(self):
@@ -62,6 +65,8 @@ class CreateExemplaries(Wizard):
             exemplary.acquisition_price = self.parameters.acquisition_price
             exemplary.identifier = self.parameters.identifier_start + str(
                 len(to_create) + 1)
+            exemplary.is_for_sale = self.parameters.is_for_sale
+    
             to_create.append(exemplary)
         Exemplary.save(to_create)
         self.parameters.exemplaries = to_create
@@ -89,8 +94,8 @@ class CreateExemplariesParameters(ModelView):
         help='Le prix d\'achat de l\'exemplaire')
     exemplaries = fields.Many2Many('library.book.exemplary', None, None,
         'Exemplaires')
-
-
+    is_for_sale = fields.Boolean('Pour la vente')
+   
 class FuseBooks(Wizard):
     'Fuse books'
     __name__ = 'library.book.fuse'
@@ -116,15 +121,7 @@ class FuseBooks(Wizard):
     def __setup__(cls):
         super().__setup__()
       
-        """ 
-        cls._error_messages.update({
-                'invalid_model': 'L\'action should be started from a bookshould be started from a bookdoit être',
-                'multiple_authors': 'Vous ne pouvez pas séléctionner des livres de plusieurs auteurs',
-               
-                'bad_matches': 'Les champs suivants ne matchent pas trés bien ensemble:  '
-                ' %(fields)s',
-                })
-        """
+      
     def transition_check_authors(self):
         if Transaction().context.get('active_model', '') != 'library.book':
             raise UserError('L\'action doit être déclenché à partir du modéle Livre ')
@@ -153,18 +150,15 @@ class FuseBooks(Wizard):
         values = self._get_merge_values()
         bad_matches = [k for k, v in values.items() if not v[1]]
 
-        # if bad_matches:
-        #     warning_name = Warning.format('Alerte Matching',[self])
-        #     if Warning.check(warning_name):
-        # #   
-        # #  warning_message = 'Les champs suivants ne matchent pas très bien ensemble: {fields}'.format(fields=', '.join(bad_matches))
-        # #     Warning.create({
-        # #         'name': warning_name,
-        # #         'message': warning_message,
-        # #         'user': self.select_main.user.id
-        # #     })
-
-        #         raise UserWarning(warning_name, 'warning_message')
+        if bad_matches:
+            
+             warning_name = Warning.format('Alerte Matching',[self])
+          
+             if Warning.check(warning_name):
+                 warning_message = 'Les champs suivants ne matchent pas très bien ensemble: {fields}'.format(fields=', '.join(bad_matches))
+                 raise UserWarning(warning_name, warning_message)
+       
+                 
         return 'preview'
             
 

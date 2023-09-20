@@ -10,5 +10,8 @@
     <field name="acquisition_date"/>
     <label name="acquisition_price"/>
     <field name="acquisition_price"/>
+    <label name="is_for_sale"/>
+    <field name="is_for_sale"/>
+    
     <field name="exemplaries" invisible="1"/>
 </form>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="invoice" />   
+    <field name="book" />   
+     <field name="number_of_exemplaries_to_sell" /> 
+     <field name="sale_price_HT_after_discount" />  
+     <field name="sale_price_TTC" />   
+</tree>     

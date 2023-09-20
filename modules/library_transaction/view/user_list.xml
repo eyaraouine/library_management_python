@@ -4,5 +4,5 @@
      <field name="cin" expand="1"/>
      <field name="phone" expand='1'/>
     <button string="Renouveler abonnement" name="renew_subscription" icon="tryton-new" />
-   
+
 </tree>

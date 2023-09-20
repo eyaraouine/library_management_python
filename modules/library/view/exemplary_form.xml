@@ -8,4 +8,5 @@
     <field name="acquisition_date"/>
     <label name="acquisition_price"/>
     <field name="acquisition_price"/>
+
 </form>

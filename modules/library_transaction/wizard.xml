@@ -63,13 +63,17 @@
             <field name="model">library.user,-1</field>
             <field name="action" ref="act_create_user_subscription"/>
         </record>
-        <!-- ################################# -->
-        <!-- # Create User Subscription Parameters # -->
-        <!-- ################################# -->
-        <record model="ir.ui.view" id="create_subscription_parameters_view_form">
-            <field name="model">library.user.create_subscription.parameters</field>
-            <field name="type">form</field>
-            <field name="name">create_subscription_parameters_form</field>
-        </record>
-    </data>
+          <!-- # Generate Invoice PDF  # -->      
+             <!-- ###################### -->         
+              <record model="ir.action.wizard" id="act_generate_invoice_pdf">       
+                   <field name="name">Générer facture PDF</field>        
+                   <field name="wiz_name">library.user.invoice.generate_invoice_pdf</field>         
+               </record>   
+                </data>
 </tryton>
+                   
+                  
+
+    
+    
+

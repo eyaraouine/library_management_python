@@ -13,6 +13,8 @@ def register():
         library.Subscription,
         library.SubcriptionConfiguration,
         library.UserSubscriptionRelation,
+        library.Invoice,
+        library.InvoiceLine,
         wizard.BorrowSelectBooks,
         wizard.ReturnSelectCheckouts,
         wizard.CreateSubscriptionParameters,
@@ -22,6 +24,8 @@ def register():
         wizard.Borrow,
         wizard.Return,
         wizard.CreateSubscription,
+        wizard.RenewSubscription,
+        wizard.GenerateInvoice,
         module='library_transaction', type_='wizard')
     
         

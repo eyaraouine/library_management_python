@@ -1,7 +1,15 @@
 <?xml version="1.0"?>
 <data>
     <xpath expr="/form/notebook/page[@id='other_data']" position="inside">
-        <label name="is_available"/>
-        <field name="is_available"/>
+        <label name="sale_price" xalign='0.0'/>
+        <field name="sale_price"/>
+        <label name="discount" xalign='0.0'/>
+        <field name="discount"/>
+        <label name="is_available_for_borrow" xalign='0.0'/>
+        <field name="is_available_for_borrow"/>
+         <label name="number_of_exemplaries_for_borrow" xalign='0.0'/>
+        <field name="number_of_exemplaries_for_borrow"/>
+        <label name="number_of_exemplaries_for_sale" xalign='0.0'/>
+        <field name="number_of_exemplaries_for_sale"/>
     </xpath>
 </data>

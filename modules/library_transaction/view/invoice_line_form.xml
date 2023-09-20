@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<form>
+    <label name="invoice" xalign='0.0'/>   
+    <field name="invoice" colspan="4"/>   
+   <label name="book" xalign='0.0' />
+    <field name="book" colspan="3"/>
+     <label name="number_of_exemplaries_to_sell" xalign='0.0'/>    
+    <field name="number_of_exemplaries_to_sell" />
+    <label name="taxe" xalign='0.0'/>  
+    <field name="taxe" /> 
+     <label name="sale_price_HT" xalign='0.0'/>    
+     <field name="sale_price_HT" />
+   <label name="sale_price_HT_after_discount" xalign='0.0'/>   
+    <field name="sale_price_HT_after_discount" />
+      <label name="sale_price_TTC" xalign='0.0'/>
+    <field name="sale_price_TTC" />   
+    
+</form>   
